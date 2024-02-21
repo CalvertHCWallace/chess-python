@@ -22,13 +22,93 @@ class GameState():
         ]
         self.whiteToMove = True
         self.moveLog = []
-        
+    
+    '''
+    Takes a Move as parameter and executes it (this will not work for "castling,
+    pawn promotion, and en-passant)
+    '''
     def makeMove(self, move):
         self.board[move.startRow][move.startCol] = "--"
         self.board[move.endRow][move.endCol] = move.pieceMoved
         self.moveLog.append(move) # log the move so wer can undo it later
         self.whiteToMove = not self.whiteToMove # swap players
 
+    '''
+    Undo the last move made
+    '''
+    def undoMove(self): 
+        if len(self.moveLog) != 0: # Check if there are moves to undo
+            last_move = self.moveLog.pop() # Remove the last move from the move log
+            self.board[last_move.startRow][last_move.startCol] = last_move.pieceMoved
+            self.board[last_move.endRow][last_move.endCol] = last_move.pieceCaptured
+            self.whiteToMove = not self.whiteToMove #Switch turns back
+            
+    '''
+    All moves considering checks
+    '''
+    def getValidMoves(self):
+        return self.getAllPossibleMoves() #for now we will not worry about checks
+        
+    '''
+    All moves without considering checks
+    '''
+    def getAllPossibleMoves(self):
+        moves = [Move((6,4), (4,4), self.board)] # Test to see if the validation works TODO: Remove the Move object
+        for row in range(len(self.board)): # number of rows
+            for col in range(len(self.board[row])): # number of cols in given row
+                turn = self.board[row][col][0]
+                if (turn == 'w' and self.whiteToMove) and (turn == 'b' and not self.whiteToMove):
+                    piece = self.board[row][col][1]
+                    if piece == 'P':
+                        self.getPawnMoves(row, col, moves)
+                    elif piece == 'R':
+                        self.getRookMoves(row, col, moves)
+                    elif piece == 'N':
+                        self.getKnightMoves(row, col, moves)
+                    elif piece == 'B':
+                        self.getBishopMoves(row, col, moves)
+                    elif piece == 'Q':
+                        self.getQueenMoves(row, col, moves)
+                    elif piece == 'K':
+                        self.getKingMoves(row, col, moves)
+        return moves
+    
+    '''
+    Get all the pawn moves for the pawn located at row, col and add these moves to the list
+    '''
+    def getPawnMoves(self, row, col, moves):
+        pass
+    
+    '''
+    Get all the rook moves for the rook located at row, col and add these moves to the list
+    '''
+    def getRookMoves(self, row, col, moves):
+        pass
+    
+    '''
+    Get all the knight moves for the knight located at row, col and add these moves to the list
+    '''
+    def getKnightMoves(self, row, col, moves):
+        pass
+    
+    '''
+    Get all the bishop moves for the bishop located at row, col and add these moves to the list
+    '''
+    def getBishopMoves(self, row, col, moves):
+        pass
+    
+    '''
+    Get all the queen moves for the queen located at row, col and add these moves to the list
+    '''
+    def getQueenMoves(self, row, col, moves):
+        pass
+    
+    '''
+    Get all the king moves for the king located at row, col and add these moves to the list
+    '''
+    def getKingMoves(self, row, col, moves):
+        pass
+    
 class Move():
     
     # maps keys to values
@@ -47,6 +127,16 @@ class Move():
         self.endCol = endSq[1]
         self.pieceMoved = board[self.startRow][self.startCol]
         self.pieceCaptured = board[self.endRow][self.endCol]
+        self.moveID = self.startRow * 1000 + self.startCol * 100 + self.endRow * 10 + self.endCol # This will create a unique ID for each move
+        print(self.moveID)
+        
+    '''
+    Overriding the equals method
+    '''
+    def __eq__(self, other):
+        if isinstance(other, Move): # This makes sure that 'other' is of 'Move' class
+            return self.moveID == other.moveID
+        return False
         
     def getChessNotation(self):
         # TODO: Change this to use real chess notation

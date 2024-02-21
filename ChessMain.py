@@ -30,6 +30,9 @@ def main():
     clock = p.time.Clock()
     screen.fill(p.Color("white"))
     gs = ChessEngine.GameState()
+    validMoves = gs.getValidMoves()
+    moveMade = False # flag variable for when a move is made
+    
     load_images() # only do this once, before the while loop
     running = True
     sqSelected = () # no square is selected, keep track of the last click of the user (tuple: (row, col))
@@ -39,23 +42,38 @@ def main():
             if e.type == p.QUIT:
                 running = False
             elif e.type == p.MOUSEBUTTONDOWN:
-                # If there is more added to the screen the calcualtion should be changed
-                location = p.mouse.get_pos() # (x, y) location of mouse
-                col = location[0]//SQ_SIZE
-                row = location[1]//SQ_SIZE
-                if sqSelected == (row, col): # the use clicked the same square twice
-                    sqSelected = () #deselect
-                    playerClicks = []
-                else:
-                    sqSelected = (row, col)
-                    playerClicks.append(sqSelected) # append for both 1st and 2nd clicks
-                if len(playerClicks) == 2: # after 2nd click
-                    move = ChessEngine.Move(playerClicks[0], playerClicks[1], gs.board)
-                    print(move.getChessNotation())
-                    gs.makeMove(move)
-                    sqSelected = ()
-                    playerClicks = []
-                
+                # Check if the right mouse button was clicked
+                if e.button == 3: # 3 corresponds to the right mouse button
+                    gs.undoMove()
+                    moveMade = True
+                else: # If the mouse button is clicked, handle selection and move logic
+                    # If there is more added to the screen the calcualtion should be changed to incoraparate the extra space used
+                    location = p.mouse.get_pos() # (x, y) location of mouse
+                    col = location[0]//SQ_SIZE
+                    row = location[1]//SQ_SIZE
+                    if sqSelected == (row, col): # the use clicked the same square twice
+                        sqSelected = () #deselect
+                        playerClicks = [] # clear player clicks
+                    else:
+                        sqSelected = (row, col)
+                        playerClicks.append(sqSelected) # append for both 1st and 2nd clicks
+                    if len(playerClicks) == 2: # after 2nd click
+                        move = ChessEngine.Move(playerClicks[0], playerClicks[1], gs.board)
+                        print(move.getChessNotation())
+                        if move in validMoves: # this will check if the move is valid before moving the piece
+                            gs.makeMove(move)
+                            moveMade = True
+                        # reset users clicks
+                        sqSelected = ()
+                        playerClicks = []
+            # key handlers
+            elif e.type == p.KEYDOWN:
+                if e.key == p.K_z: # undo when 'z' is pressed
+                    gs.undoMove()
+                    moveMade = True
+        if moveMade: # This checks for new valid moves only after a move has been made
+            validMoves = gs.getValidMoves()
+            moveMade = False
         drawGameState(screen, gs)
         clock.tick(MAX_FPS)
         p.display.flip()
