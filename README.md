@@ -6,7 +6,7 @@ Welcome to **Python Chess**! This is a simple chess game implemented in Python u
 
 - Play against a friend on the same computer.
 - Basic chess rules implemented (movement, capturing, check, checkmate).
-- User-friendly graphical interface with visual representation of the chessboard and pieces.
+- User-friendly graphical interface with a visual representation of the chessboard and pieces.
 - Highlights valid moves for selected pieces.
 - Ability to save and load games.
 - Customizable board size and piece images.
@@ -55,8 +55,8 @@ Welcome to **Python Chess**! This is a simple chess game implemented in Python u
 
 ## Credits
 
-This project was inspired by various tutorials and resources available online, including [insert tutorial/resource names or links here]. Special thanks to the contributors and maintainers of the Pygame library for their valuable work.
+This project was inspired by the tutorial: https://www.youtube.com/watch?v=EnYui0e73Rs&list=PLBwF487qi8MGU81nDGaeNE1EnNEPYWKY_. Special thanks to the contributors and maintainers of the Pygame library for their valuable work and Eddie Sharick for the fun learning experience.
 
 ## License
 
-This project is licensed under the [insert license name, e.g., MIT License]. See the [LICENSE](LICENSE) file for more details.
+TBA
