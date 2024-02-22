@@ -1,3 +1,5 @@
-.vscode/settings.json # These are only my settings for vscode
-.notes/notes.txt # These are personal notes that don't need to be included in the project
-__pychache__/__pycache__/ChessEngine.cpython-312.pyc
+.vscode/settings.json
+# These are only my settings for vscode
+.notes/notes.txt 
+# These are personal notes that don't need to be included in the project
+__pycache__/ChessEngine.cpython-312.pyc
