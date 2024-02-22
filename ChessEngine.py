@@ -20,6 +20,8 @@ class GameState():
             ["wP", "wP", "wP", "wP", "wP", "wP", "wP", "wP"],
             ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"]
         ]
+        self.moveFunctions = {'P': self.getPawnMoves, 'R': self.getRookMoves, 'N': self.getKnightMoves,
+                              'B': self.getBishopMoves, 'Q': self.getQueenMoves, 'K': self.getKingMoves}
         self.whiteToMove = True
         self.moveLog = []
     
@@ -31,7 +33,7 @@ class GameState():
         self.board[move.startRow][move.startCol] = "--"
         self.board[move.endRow][move.endCol] = move.pieceMoved
         self.moveLog.append(move) # log the move so wer can undo it later
-        self.whiteToMove = not self.whiteToMove # swap players
+        self.whiteToMove = not self.whiteToMove # swap players after a turn
 
     '''
     Undo the last move made
@@ -53,59 +55,75 @@ class GameState():
     All moves without considering checks
     '''
     def getAllPossibleMoves(self):
-        moves = [Move((6,4), (4,4), self.board)] # Test to see if the validation works TODO: Remove the Move object
+        moves = [] # Test to see if the validation works
         for row in range(len(self.board)): # number of rows
             for col in range(len(self.board[row])): # number of cols in given row
                 turn = self.board[row][col][0]
-                if (turn == 'w' and self.whiteToMove) and (turn == 'b' and not self.whiteToMove):
+                if (turn == 'w' and self.whiteToMove) or (turn == 'b' and not self.whiteToMove):
                     piece = self.board[row][col][1]
-                    if piece == 'P':
-                        self.getPawnMoves(row, col, moves)
-                    elif piece == 'R':
-                        self.getRookMoves(row, col, moves)
-                    elif piece == 'N':
-                        self.getKnightMoves(row, col, moves)
-                    elif piece == 'B':
-                        self.getBishopMoves(row, col, moves)
-                    elif piece == 'Q':
-                        self.getQueenMoves(row, col, moves)
-                    elif piece == 'K':
-                        self.getKingMoves(row, col, moves)
+                    self.moveFunctions[piece](row, col, moves) # this call the appropriate move function based on piece type
         return moves
     
     '''
     Get all the pawn moves for the pawn located at row, col and add these moves to the list
     '''
+    # Todo: Add the logic for en passant
     def getPawnMoves(self, row, col, moves):
-        pass
+        if self.whiteToMove: # check the white pawn moves
+            if self.board[row - 1][col] == "--": # 1 square pawn advance
+                moves.append(Move((row, col), (row - 1, col), self.board))
+                if row == 6 and self.board[row - 2][col] == "--": # 2 square pawn move
+                    moves.append(Move((row, col), (row - 2, col), self.board))
+            if col - 1 >= 0: # captures to the left
+                if self.board[row - 1][col - 1][0] == 'b': # check if enemy piece to capture
+                    moves.append(Move((row, col), (row - 1, col - 1), self.board))
+            if col + 1 <= 7: # captures to the right
+                if self.board[row - 1][col + 1][0] == 'b': # check if enemy piece to capture
+                    moves.append(Move((row, col), (row - 1, col + 1), self.board))
+        else: # check the black pawn
+            if self.board[row + 1][col] == "--": # 1 square pawn advance
+                moves.append(Move((row, col), (row + 1, col), self.board))
+                if row == 1 and self.board[row + 2][col] == "--": # 2 square pawn move
+                    moves.append(Move((row, col), (row + 2, col), self.board))
+            if col - 1 >= 0: # captures to the right
+                if self.board[row + 1][col - 1][0] == 'w': # check if enemy piece to capture
+                    moves.append(Move((row, col), (row + 1, col - 1), self.board))
+            if col + 1 <= 7: # captures to the left
+                if self.board[row + 1][col + 1][0] == 'w': # check if enemy piece to capture
+                    moves.append(Move((row, col), (row + 1, col + 1), self.board))
     
     '''
     Get all the rook moves for the rook located at row, col and add these moves to the list
     '''
+    # Todo: Add logic for rook moves
     def getRookMoves(self, row, col, moves):
         pass
     
     '''
     Get all the knight moves for the knight located at row, col and add these moves to the list
     '''
+    # Todo: Add logic for rook moves
     def getKnightMoves(self, row, col, moves):
         pass
     
     '''
     Get all the bishop moves for the bishop located at row, col and add these moves to the list
     '''
+    # Todo: Add logic for rook moves
     def getBishopMoves(self, row, col, moves):
         pass
     
     '''
     Get all the queen moves for the queen located at row, col and add these moves to the list
     '''
+    # Todo: Add logic for rook moves
     def getQueenMoves(self, row, col, moves):
         pass
     
     '''
     Get all the king moves for the king located at row, col and add these moves to the list
     '''
+    # Todo: Add logic for rook moves
     def getKingMoves(self, row, col, moves):
         pass
     
