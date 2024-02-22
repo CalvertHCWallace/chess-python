@@ -1,0 +1,3 @@
+.vscode # These are only my settings for vscode
+.notes # These are personal notes that don't need to be included in the project
+__pychache__
