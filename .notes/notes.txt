@@ -1,5 +1,0 @@
-Bugs:
-
-1. Empty spaces take pieces
-2.Change the chess pieces for better looking ones.
-3. The turn order is not respected, need to check variable whites turn to switch between true and false
