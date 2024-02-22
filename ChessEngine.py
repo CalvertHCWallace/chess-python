@@ -97,35 +97,94 @@ class GameState():
     '''
     # Todo: Add logic for rook moves
     def getRookMoves(self, row, col, moves):
-        pass
+        directions = ((-1, 0), (1, 0), (0, -1), (0, 1)) # Up, down, left, right
+        for d in directions: # Iterate over each direction
+            for i in range(1, 8): # Iterate over each possible distance a rook can move in the current direction
+                # Calculate the row and column of the square the rook would land on
+                endRow = row + d[0] * i
+                endCol = col + d[1] * i
+                # Check if the calculated end square is within the bounds of the chessboard
+                if 0 <= endRow < 8 and 0 <= endCol < 8:
+                    # Get the piece at the end square
+                    endPiece = self.board[endRow][endCol]
+                    # If the end square is empty, append the move to the moves list
+                    if endPiece == "--":
+                        moves.append(Move((row, col), (endRow, endCol), self.board))
+                    # If the end square contains an opponent's piece
+                    elif endPiece[0] != self.board[row][col][0]:
+                        moves.append(Move((row, col), (endRow, endCol), self.board))
+                        break
+                    # If the end square contains the rook's own piece
+                    else:
+                        break
+                # If the end square is outside the bounds of the board
+                else:
+                    break
     
     '''
     Get all the knight moves for the knight located at row, col and add these moves to the list
     '''
     # Todo: Add logic for rook moves
     def getKnightMoves(self, row, col, moves):
-        pass
-    
+        # The possible knight move directions in terms of changes in row and column
+        directions = ((-2, -1), (-2, 1), (-1, -2), (-1, 2),
+                      (1, -2), (1, 2), (2, -1), (2, 1))
+        # Iterate over each directions
+        for d in directions:
+            # Calculate the row and column the knight will land on
+            endRow = row + d[0]
+            endCol = col + d[1]
+            # Check if the calculated end square is with bounds of the board
+            if 0 <= endRow < 8 and 0 <= endCol < 8:
+                endPiece = self.board[endRow][endCol]
+                # If the end square is empty or contains an opponent's piece
+                if endPiece == "--" or endPiece[0] != self.board[row][col][0]:
+                    moves.append(Move((row, col), (endRow, endCol), self.board))
+
     '''
     Get all the bishop moves for the bishop located at row, col and add these moves to the list
     '''
-    # Todo: Add logic for rook moves
     def getBishopMoves(self, row, col, moves):
-        pass
+        directions = ((-1, -1), (-1, 1), (1, -1), (1, 1)) # Up-left, up-right, down-left, down-right
+        for d in directions: # Iterate over each directions
+            # Calculate the row and column the bishop will land on
+            for i in range(1, 8):
+                endRow = row + d[0] * i
+                endCol = col + d[1] * i
+                if 0 <= endRow < 8 and 0 <= endCol < 8:
+                    endPiece = self.board[endRow][endCol]
+                    if endPiece == "--":
+                        moves.append(Move((row, col), (endRow, endCol), self.board))
+                    elif endPiece[0] != self.board[row][col][0]:
+                        moves.append(Move((row, col), (endRow, endCol), self.board))
+                        break
+                    else:
+                        break
+                else:
+                    break
     
     '''
     Get all the queen moves for the queen located at row, col and add these moves to the list
     '''
     # Todo: Add logic for rook moves
     def getQueenMoves(self, row, col, moves):
-        pass
+        self.getRookMoves(row, col, moves)
+        self.getBishopMoves(row, col, moves)
     
     '''
     Get all the king moves for the king located at row, col and add these moves to the list
     '''
     # Todo: Add logic for rook moves
     def getKingMoves(self, row, col, moves):
-        pass
+        directions = ((-1, -1), (-1, 0), (-1, 1), (0, -1),
+                      (0, 1), (1, -1), (1, 0), (1, 1))
+        for d in directions:
+            endRow = row + d[0]
+            endCol = col + d[1]
+            if 0 <= endRow < 8 and 0 <= endCol < 8:
+                endPiece = self.board[endRow][endCol]
+                if endPiece == "--" or endPiece[0] != self.board[row][col][0]:
+                    moves.append(Move((row, col), (endRow, endCol), self.board))
     
 class Move():
     
