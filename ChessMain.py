@@ -66,6 +66,8 @@ def main():
                         # reset users clicks
                         sqSelected = ()
                         playerClicks = []
+                    # TODO: There seems to be a probelm with how the reselect works
+                    #     playerClicks = [sqSelected]
             # key handlers
             elif e.type == p.KEYDOWN:
                 if e.key == p.K_z: # undo when 'z' is pressed
